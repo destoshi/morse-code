@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Morse Code Generator</title>
+    <meta name = "author" content = "Anas Bouabid" />
+    <meta name = "description" content = "Morse Code Generator App" />
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script defer src="assets/fontawesome/js/all.js"></script>
+</head>
+<body>
+<div class="header">
+    <h1>Morse Code Generator</h1>
+    <br>
+    <div>
+        <h1 id="info-btn"><i class="fas fa-info-circle"></i></h1>
+        <div id="modal-container">
+            <div id="modal">
+                <p1>test test test</p1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-wrap">
+    <div class="grid-wrap">
+        <div class="input-output">
+            <div class="input-div">
+                <textarea autocomplete="off" rows="5" autocapitalize="off" spellcheck="false" placeholder="Enter your normal text here..." id="text-input"></textarea>
+            </div>
+
+            <div class="output-div">
+                <textarea autocomplete="off" rows="5" autocapitalize="off" spellcheck="false" placeholder="Enter your morse code here..." name="" id="text-output"></textarea>
+            </div>
+
+            <div class="buttons">
+                <div class="sound">
+                    <audio id="audio" src="audio/beep.wav"></audio>
+                    <button id="sound-btn" onclick="playSound();">Sound</button>
+                </div>
+                <div class="reset">
+                    <button id="reset-btn" onclick="reset();">Reset</button>
+                </div>
+                <div class="light">
+                    <button id="light-btn" onclick="playLight()">Light</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="display-div">
+            <div id="light-div">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/script.js" type="text/javascript"></script>
+</body>
+</html>
