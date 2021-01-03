@@ -70,15 +70,6 @@ function morseToText(text){
     }
 }
 
-
-document.getElementById('text-input').addEventListener('input', function () {
-    textToMorse(this.value.toUpperCase());
-});
-
-document.getElementById('text-output').addEventListener('input', function () {
-    morseToText(this.value.toUpperCase());
-});
-
 let beep = document.getElementById("audio");
 
 async function playSound() {
@@ -116,6 +107,7 @@ async function playSound() {
     btn.style.backgroundColor = "#002e63";
     btn.style.cursor = 'pointer';
 }
+
 
 async function playLight() {
     let btn = document.getElementById("light-btn");
@@ -174,6 +166,68 @@ function reset(){
     lightBtn.style.backgroundColor = "#002e63";
     lightBtn.style.cursor = 'pointer';
 }
+
+
+
+/*----
+Audio using Web Audio API
+ ----*/
+
+function playAudio(){
+    let AudioContext = new window.AudioContext();
+
+    let oscillator = AudioContext.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = 700; //500~800
+
+    let gainNode = AudioContext.createGain();
+
+
+    let rate = 20; // words per minute
+    let dot = 1.2/rate; //formula according to Wikipedia, dot is the duration in ms, and rate is the speed in wpm
+
+    let text = document.getElementById('text-output').value;
+
+    let t = AudioContext.currentTime;
+
+    for(let i = 0; i < text.length; i++){
+        switch (text[i]){
+            case '.':
+                gainNode.gain.setValueAtTime(1, t); //setValueAtTime(value, startTime)
+                t += dot;
+                gainNode.gain.setValueAtTime(0, t);
+                t += dot; // one dot time space between every char
+                break;
+            case '-':
+                gainNode.gain.setValueAtTime(1, t);
+                t += 3 * dot; // because a dash is 3 dots according to Wikipedia
+                gainNode.gain.setValueAtTime(0, t);
+                t += dot;
+                break;
+            case ' ':
+                t += 3 * dot;
+                break;
+            default:
+                t += 2;
+        }
+    }
+
+    oscillator.connect(gainNode);
+    gainNode.connect(AudioContext.destination);
+
+    oscillator.start();
+
+    return false;
+}
+
+
+document.getElementById('text-input').addEventListener('input', function () {
+    textToMorse(this.value.toUpperCase());
+});
+
+document.getElementById('text-output').addEventListener('input', function () {
+    morseToText(this.value.toUpperCase());
+});
 
 
 
