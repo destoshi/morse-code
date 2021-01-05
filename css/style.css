@@ -80,6 +80,18 @@ body{
     width: 40vh;
     margin: 10vh auto;
     border-radius: 100%;
+    display: none;
+}
+
+#graph-div{
+    height: 60vh;
+    width: 100%;
+}
+#graph-canvas{
+    height: 60vh;
+    width: 100%;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
 
 .input-div{

@@ -1,4 +1,6 @@
-//Author: Bouabid Anas
+////////////////////////////
+/// Author: Bouabid Anas ///
+////////////////////////////
 
 let morse = {
     ' ':'  ', 'A':'.-', 'B':'-...',
@@ -115,7 +117,11 @@ async function playLight() {
     btn.style.backgroundColor = "#55606d";
     btn.style.cursor = 'not-allowed';
 
+    let graphDiv = document.getElementById("graph-div");
+    graphDiv.style.display = "none";
+
     let div = document.getElementById("light-div");
+    div.style.display = "block";
 
     let text = document.getElementById('text-output').value;
     for (let i = 0; i < text.length; i++) {
@@ -153,40 +159,35 @@ async function playLight() {
     btn.disabled = false;
     btn.style.backgroundColor = "#002e63";
     btn.style.cursor = 'pointer';
-}
 
-function reset(){
-    let soundBtn = document.getElementById("sound-btn");
-    soundBtn.disabled = false;
-    soundBtn.style.backgroundColor = "#002e63";
-    soundBtn.style.cursor = 'pointer';
-
-    let lightBtn = document.getElementById("light-btn");
-    lightBtn.disabled = false;
-    lightBtn.style.backgroundColor = "#002e63";
-    lightBtn.style.cursor = 'pointer';
+    div.style.display = "none";
+    graphDiv.style.display = "block";
 }
 
 
+/*-------------------------
+<Audio using Web Audio API>
+ ------------------------*/
 
-/*----
-Audio using Web Audio API
- ----*/
+
 
 function playAudio(){
-    let AudioContext = new window.AudioContext();
+    let text = document.getElementById('text-output').value;
+    if(text.length === 0){
+        return false;
+    }
 
+    let AudioContext = new window.AudioContext();
     let oscillator = AudioContext.createOscillator();
     oscillator.type = 'sine';
     oscillator.frequency.value = 700; //500~800
 
     let gainNode = AudioContext.createGain();
-
+    gainNode.gain.value = 0;//initialise to 0, if not an empty string will cause a headache :)
 
     let rate = 20; // words per minute
     let dot = 1.2/rate; //formula according to Wikipedia, dot is the duration in ms, and rate is the speed in wpm
 
-    let text = document.getElementById('text-output').value;
 
     let t = AudioContext.currentTime;
 
@@ -208,16 +209,100 @@ function playAudio(){
                 t += 3 * dot;
                 break;
             default:
-                t += 2;
+                t += 4 * dot;
         }
     }
 
+    let analyser = AudioContext.createAnalyser();
+
     oscillator.connect(gainNode);
-    gainNode.connect(AudioContext.destination);
+    gainNode.connect(analyser); //Connect oscillator to analyser node
+    analyser.connect(AudioContext.destination);
 
     oscillator.start();
 
-    return false;
+    /////////////////////////////////
+    /// Visualising the waveforms ///
+    /////////////////////////////////
+
+    let lightDiv = document.getElementById("light-div");
+    lightDiv.style.display = "none"; //remove light div
+
+    let canvas = document.getElementById("graph-canvas");
+    let graph = canvas.getContext('2d');
+
+    analyser.fftSize = 2048; //Fast Fourier Transform, must be between 2^5 and 2^15, defaults to 2048
+    let bufferLength = analyser.frequencyBinCount; //an unsigned long value half that of the FFT size.
+                           //generally its the number of data values we have to play with for the vis.
+    let dataArray = new Uint8Array(bufferLength); //an array of 8-bit unsigned integers from var bufferLength
+
+    analyser.getByteTimeDomainData(dataArray); //copies the current waveform, or time-domain, data into a Uint8Array
+    console.log(dataArray);
+
+    //Dynamic Width and Height
+    let width = document.getElementById("graph-div").offsetWidth;
+    let height = document.getElementById("graph-div").offsetHeight;
+
+    graph.clearRect(0, 0, width, height);
+
+    function draw(){
+        let graphDiv = document.getElementById("graph-div");
+        graphDiv.style.display = "block!important"; //show graph div
+        window.requestAnimationFrame(draw); //request that browser to update animation before next repaint
+
+        analyser.getByteTimeDomainData(dataArray); //copies the current waveform, or time-domain, data into a Uint8Array
+
+        let gradient = graph.createLinearGradient(0, 0, 0, 170);
+        gradient.addColorStop(0, 'rgb(0, 78, 146)');
+        gradient.addColorStop(1, 'rgb(0, 4, 40)');
+
+        graph.fillStyle = gradient;
+        graph.fillRect(0, 0, width, height);
+        graph.lineWidth = 2;
+        graph.strokeStyle = "rgb(255,255,255)";
+        graph.beginPath();
+
+        let sliceWidth = width / bufferLength; //with to float, then divide with by number of data values
+
+        let x = 0;
+        for(let i = 0; i < bufferLength; i++){ //we loop though each data value
+            let v = dataArray[i] / 128.0; //128 = (2048 / 8bits) / 2 (because unsigned int)
+            let y = v * height / 2; //height/2 because of positive and negative values
+
+            if(i === 0){
+                graph.moveTo(x, y); //move because its first value, we cant draw a line from null
+            }else{
+                graph.lineTo(x, y);
+            }
+
+            x += sliceWidth; //adds sliceWidth to x for each value we draw, meaning horizontal values
+        }
+
+        graph.lineTo(graph.width, graph.height);
+        graph.stroke();
+    }
+
+    draw();
+    await
+}
+
+
+/*--------------------------
+</Audio using Web Audio API>
+ -------------------------*/
+
+
+function reset(){
+    let soundBtn = document.getElementById("sound-btn");
+    soundBtn.disabled = false;
+    soundBtn.style.backgroundColor = "#002e63";
+    soundBtn.style.cursor = 'pointer';
+
+
+    let lightBtn = document.getElementById("light-btn");
+    lightBtn.disabled = false;
+    lightBtn.style.backgroundColor = "#002e63";
+    lightBtn.style.cursor = 'pointer';
 }
 
 
