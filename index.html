@@ -27,28 +27,41 @@
     <div class="modal fade" id="info-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                <ul  class="nav nav-pills">
+                    <li class="active">
+                        <a  href="#1b" data-toggle="tab">Instructions</a>
+                    </li>
+                    <li>
+                        <a href="#2b" data-toggle="tab">Dictionary</a>
+                    </li>
+                </ul>
                 <div class="modal-body">
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                    <div class="tab-content clearfix">
+                        <div class="tab-pane active" id="1b">
+                            <h3>Input text</h3>
+                            <ul>
+                                <li>Enter text into input box</li>
+                                <li>Characters that cannot be translated will be translated as '#'</li>
+                            </ul>
+
+                            <h3>Input morse</h3>
+                            <ul>
+                                <li>Enter morse into input box</li>
+                                <li>Morse letters must be separated by 1 space</li>
+                                <li>Morse words must be separated by 2 or more spaces</li>
+                                <li>Characters that cannot be translated will be translated as '#'</li>
+                            </ul>
+
+                        </div>
+                        <div class="tab-pane" id="2b">
+                            <h3 style="text-align: center;">Dictionary</h3>
+                            <br>
+
+                            <div>
+                                <table id="morse-dic">
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -70,7 +83,7 @@
             <div class="buttons-div">
                 <div class="buttons">
                     <audio id="audio" src="audio/beep.wav"></audio>
-                    <button id="sound-btn" onclick="playAudio();">Sound</button>
+                    <button id="sound-btn" data-playing="false" onclick="playAudio();">Sound</button>
                     <button id="light-btn" onclick="playLight()">Light</button>
                     <button id="reset-btn" onclick="reset();">Reset</button>
                 </div>

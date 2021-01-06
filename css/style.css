@@ -144,6 +144,35 @@ textarea{
 }
 
 
+.nav-pills{
+    width: fit-content;
+    margin: auto;
+    padding: 15px;
+}
+
+.nav-pills>li.active>a{
+    background-color: #002e63!important;
+}
+
+.nav-pills a{
+    color: #002e63;
+}
+
+
+#morse-dic *{
+    border: 1px solid #002e63;
+    font-size: 16px;
+}
+
+#morse-dic td{
+    padding: 5px;
+}
+
+#morse-dic{
+    margin: auto;
+}
+
+
 
 
 

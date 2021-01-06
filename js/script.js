@@ -132,26 +132,26 @@ async function playLight() {
             if (item === ' ') {
                 if(item2 === ' '){
                     // insert desired number of milliseconds to pause here
-                    setTimeout(resolve, 750);
+                    setTimeout(resolve, 240);
                 }else{
                     // insert desired number of milliseconds to pause here
-                    setTimeout(resolve, 150);
+                    setTimeout(resolve, 240);
                 }
             } else if(item === '.'){
-                setTimeout(resolve, 150);
+                setTimeout(resolve, 80);
                 div.style.background = "#ffffff";
             }else if(item === '-'){
-                setTimeout(resolve, 150);
+                setTimeout(resolve, 240);
                 div.style.background = "#000000";
             }
         });
         await new Promise((resolve) => {
             if(item === '.' || item === '-'){
                 div.style.background = "transparent";
-                setTimeout(resolve, 150);
+                setTimeout(resolve, 80);
             }else if(item === ' '){
                 div.style.background = "transparent";
-                setTimeout(resolve, 200);
+                setTimeout(resolve, 240);
             }
         });
     }
@@ -176,6 +176,11 @@ function playAudio(){
     if(text.length === 0){
         return false;
     }
+
+    let btn = document.getElementById("sound-btn");
+    btn.disabled = true;
+    btn.style.backgroundColor = "#55606d";
+    btn.style.cursor = 'not-allowed';
 
     let AudioContext = new window.AudioContext();
     let oscillator = AudioContext.createOscillator();
@@ -283,7 +288,12 @@ function playAudio(){
     }
 
     draw();
-    await
+
+    setTimeout(function () {
+        btn.disabled = false;
+        btn.style.backgroundColor = "#002e63";
+        btn.style.cursor = 'pointer';
+    }, t * 1000); //t is length of audio in s, t * 1000 is in ms
 }
 
 
@@ -315,4 +325,22 @@ document.getElementById('text-output').addEventListener('input', function () {
 });
 
 
+function printArray(){
+    let output = "";
+    let i = 0;
+    for(let key in morse){
+        if(i === 0){
+            output += "<tr>";
+        }else if(i % 4 === 0){
+            output += "</tr><tr>";
+        }
+        output += "<td>"+ key +"</td>";
+        output += "<td>"+ morse[key] +"</td>";
 
+        i++;
+    }
+    output += "</tr>";
+    return output;
+}
+
+document.getElementById("morse-dic").innerHTML = printArray();
